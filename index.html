@@ -1,0 +1,563 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Happy Birthday Varisha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ref-paper: #efe9d6;
+            --ref-grid: rgba(105, 94, 72, 0.23);
+            --ref-berry: #8f214d;
+            --ref-berry-dark: #6f173b;
+            --ref-berry-soft: #b94372;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 1.5s ease, background-image 1.5s ease;
+        }
+
+        /* Themes */
+        .theme-paper {
+            background-color: var(--ref-paper);
+            background-image:
+                linear-gradient(var(--ref-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--ref-grid) 1px, transparent 1px);
+            background-size: 34px 34px;
+            color: #442438;
+        }
+
+        .theme-dark {
+            background-color: #0f172a;
+            background-image: none;
+            color: #e2e8f0;
+        }
+
+        .theme-party {
+            background-color: #050505;
+            background-image: none;
+            color: #ffffff;
+        }
+
+        /* Page Transitions */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            position: absolute;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-section.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* Scrapbook Background Shapes */
+        .left-shape {
+            position: absolute; left: -7rem; top: 16%; z-index: -1;
+            width: 16rem; height: 31rem; border-radius: 0 52% 52% 0;
+            background: var(--ref-berry);
+            transition: opacity 1s;
+            pointer-events: none;
+        }
+        .right-shape {
+            position: absolute; right: -5rem; bottom: -3.4rem; z-index: -1;
+            width: 18rem; height: 8.5rem; border-radius: 100% 0 0 0;
+            background: var(--ref-berry-soft);
+            transition: opacity 1s;
+            pointer-events: none;
+        }
+        .theme-dark .left-shape, .theme-dark .right-shape,
+        .theme-party .left-shape, .theme-party .right-shape { opacity: 0; }
+
+        /* Typography & Buttons */
+        .impact-font { font-family: Impact, "Arial Black", sans-serif; letter-spacing: 1px; }
+        .script-font { font-family: 'Pacifico', cursive; }
+        
+        /* Highlighted text class taaki text background ke saath overlap na ho */
+        .sticker-text {
+            text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .magic-button {
+            border: 0; border-radius: 999px; padding: 0.6rem 1.8rem;
+            color: #fff; background: var(--ref-berry);
+            box-shadow: inset 0 -0.2rem 0 rgba(0, 0, 0, 0.15), 0 0.5rem 1rem rgba(111, 23, 59, 0.2);
+            font-size: 1.25rem; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+        .magic-button:hover { transform: translateY(-3px); }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+        .floaty { animation: float 3.5s ease-in-out infinite; }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b inset; transform: scale(1); }
+            50% { box-shadow: 0 0 25px #fcd34d, 0 0 30px #f59e0b inset; transform: scale(1.05); }
+            100% { box-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b inset; transform: scale(1); }
+        }
+        .btn-glow { animation: pulse-glow 2s infinite; background: linear-gradient(135deg, #fbbf24, #d97706); color: white; border: none; }
+
+        /* The Pure CSS Cake */
+        .birthday-cake { position: relative; width: 10rem; height: 8rem; transition: all 1s ease; margin-bottom: 2rem; }
+        .birthday-cake::before {
+            content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 10rem; height: 3.5rem; border-radius: 0.8rem;
+            background: linear-gradient(#ffd782 0 22%, #ef9bb9 23% 100%);
+            box-shadow: 0 0.8rem 1.1rem rgba(0,0,0, 0.15);
+        }
+        .birthday-cake::after {
+            content: ""; position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+            width: 7.5rem; height: 3rem; border-radius: 0.8rem;
+            background: linear-gradient(#f4e7ef 0 24%, #c5688b 25% 100%);
+        }
+        .theme-dark .birthday-cake { filter: brightness(0.4); }
+        .theme-party .birthday-cake {
+            filter: drop-shadow(0 0 30px rgba(255, 105, 180, 0.8)) drop-shadow(0 0 50px rgba(255, 215, 0, 0.6));
+            transform: scale(1.1);
+        }
+
+        /* Candles */
+        .candle {
+            position: absolute; bottom: 6rem; width: 0.25rem; height: 1.8rem; background: #f6df85;
+            transition: opacity 0.5s;
+        }
+        .candle::before {
+            content: ""; position: absolute; left: -0.22rem; top: -0.6rem;
+            width: 0.7rem; height: 0.7rem; border-radius: 50% 50% 50% 0;
+            background: #ffda5a; transform: rotate(-45deg);
+            box-shadow: 0 0 10px #ffda5a, 0 0 20px #ff8c00;
+            opacity: 0; transition: opacity 0.5s;
+        }
+        .candle:nth-child(1) { left: 3.2rem; }
+        .candle:nth-child(2) { left: 5rem; height: 2.2rem; bottom: 6rem; }
+        .candle:nth-child(3) { left: 6.8rem; }
+        
+        .candles-lit .candle::before { opacity: 1; animation: flicker 0.6s ease-in-out infinite alternate; }
+        .theme-party .candle::before { opacity: 0; }
+
+        @keyframes flicker {
+            0% { transform: rotate(-45deg) scale(0.9); }
+            100% { transform: rotate(-42deg) scale(1.15); }
+        }
+
+        /* Canvas for Fireworks */
+        #fireworks { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1s; }
+        .theme-party #fireworks { opacity: 1; }
+
+        /* Letter Styling */
+        .paper-letter {
+            width: 90%; max-width: 550px; height: 65vh; overflow-y: auto;
+            background: #fff; padding: 2rem; border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 2px solid rgba(111, 23, 59, 0.1);
+            text-align: left; font-size: 1.15rem; line-height: 1.7; color: #2b1d27;
+            position: relative;
+        }
+
+        .paper-letter::-webkit-scrollbar { width: 6px; }
+        .paper-letter::-webkit-scrollbar-thumb { background-color: var(--ref-berry-soft); border-radius: 10px; }
+
+        /* Aesthetic Video Frame */
+        .polaroid-frame {
+            background: white;
+            padding: 12px 12px 50px 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            position: relative;
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+        .polaroid-frame:hover { transform: rotate(0deg) scale(1.02); }
+        .washi-tape {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-3deg);
+            width: 120px; height: 35px; background-color: rgba(255, 182, 193, 0.5); 
+            border: 1px solid rgba(255, 182, 193, 0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.05); z-index: 20;
+        }
+
+        /* Custom Transparent Video Controls */
+        .glass-controls {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="theme-paper">
+
+    <!-- AUDIO FILES -->
+    <audio id="bgm-bday" src="happy_birthday.mp3" loop preload="auto"></audio>
+
+    <!-- Global Scrapbook Shapes -->
+    <span class="left-shape"></span>
+    <span class="right-shape"></span>
+
+    <!-- PAGE 1: Intro -->
+    <section id="page-intro" class="page-section active">
+        <!-- CAT IMAGE -->
+        <img src="cat.png" alt="Cute Cat" class="w-48 h-auto floaty mb-6 drop-shadow-xl z-10" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1864/1864514.png'">
+        
+        <!-- Sticker-text class se ye heading humesha read hogi -->
+        <h1 class="impact-font text-5xl md:text-7xl text-[#6f173b] sticker-text z-10">HII DI!!</h1>
+        <p class="text-2xl font-bold mt-2 z-10">Kuch banaya hai</p>
+        <p class="text-xl mt-1 text-gray-700 z-10">Do you want to see?</p>
+
+        <!-- Container for Buttons with High Z-Index -->
+        <div class="flex gap-4 mt-8 relative z-50">
+            <button onclick="goToLetter()" class="magic-button px-8 py-3">Yes</button>
+            <button id="btn-no" class="magic-button bg-gray-500 shadow-none hover:bg-gray-600 transition-all duration-200">No</button>
+        </div>
+    </section>
+
+    <!-- PAGE 2: Letter & Message -->
+    <section id="page-letter" class="page-section">
+        <!-- Sticker-text class for perfect readability against dark maroon shape -->
+        <h1 class="script-font text-4xl text-[#8f214d] mb-2 sticker-text z-10">Mn ki Baate</h1>
+        <p class="text-lg text-gray-700 mb-8 font-bold z-10">Tap the envelope to open it.</p>
+
+        <!-- Tulip Envelope -->
+        <div id="envelope-container" class="cursor-pointer floaty transition transform hover:scale-105 z-20 relative" onclick="openLetter()">
+            <img src="envelope.png" alt="Envelope" class="w-48 drop-shadow-2xl" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2907/2907565.png'">
+            <p class="text-center mt-4 font-bold text-[#b94372] animate-pulse">Click Me ♥</p>
+        </div>
+
+        <!-- The Letter -->
+        <div id="letter-content" class="paper-letter hidden flex-col z-20 relative">
+            
+            <!-- CUTE STICKER  -->
+            <div class="flex justify-center mb-4">
+                <img src="sticker.png" alt="Cute Sticker" class="w-24 drop-shadow-md rotate-3" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2356/2356064.png'">
+            </div>
+
+            <p id="typed-text" class="whitespace-pre-wrap"></p>
+            
+            <div class="flex justify-center mt-8 mb-4">
+                <button onclick="goToCake()" class="magic-button opacity-0 transition-opacity duration-1000" id="btn-next-cake">Cake Time 🎂</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 3: The Cake Party -->
+    <canvas id="fireworks"></canvas>
+    <section id="page-cake" class="page-section">
+        <div class="text-center z-20 relative mb-8" id="cake-texts">
+            <h1 class="script-font text-5xl mb-2 transition-colors duration-1000" id="cake-heading">Shh... Andhera hai!</h1>
+            <p class="text-xl transition-colors duration-1000" id="cake-sub">Room mein andhera hai, pehle candles jalate hain.</p>
+        </div>
+
+        <div class="birthday-cake z-20 relative" id="the-cake">
+            <span class="candle"></span>
+            <span class="candle"></span>
+            <span class="candle"></span>
+        </div>
+
+        <div class="z-30 mt-8 h-16 flex flex-col items-center justify-center gap-4 relative">
+            <button id="btn-light" onclick="lightCandles()" class="btn-glow px-8 py-3 rounded-full font-bold text-xl tracking-wide cursor-pointer">
+                🔥 Light Candles
+            </button>
+            <button id="btn-blow" onclick="blowCandles()" class="magic-button hidden bg-blue-500 shadow-[0_0_20px_#3b82f6] hover:bg-blue-600 px-8 py-3 text-xl">
+                💨 Blow Candles
+            </button>
+            
+            <button id="btn-go-video" onclick="goToVideo()" class="magic-button hidden bg-[#ff69b4] shadow-[0_0_20px_#ff69b4] hover:bg-[#ff1493] px-10 py-4 text-xl animate-bounce mt-4">
+                Meet The Birthday Girl ✨
+            </button>
+        </div>
+    </section>
+
+    <!-- PAGE 4: Video Frame Page -->
+    <section id="page-video" class="page-section">
+        <!-- Sticker-text class for perfect readability -->
+        <h1 class="script-font text-4xl text-[#8f214d] mb-8 sticker-text z-20 relative">The Star of the Day ✨</h1>
+        
+        <!-- Aesthetic Video Frame -->
+        <div class="polaroid-frame z-20 relative w-80 max-w-full">
+            <div class="washi-tape"></div>
+            
+            <!-- Video Container -->
+            <div class="w-full aspect-[3/4] bg-gray-200 overflow-hidden relative group rounded-sm shadow-inner" id="video-container">
+                
+                <!-- VIDEO SOURCE -->
+                <video id="di-video" class="w-full h-full object-cover" playsinline preload="metadata">
+                    <source src="di_video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <!-- Custom Transparent Controls -->
+                <div class="absolute bottom-3 left-3 right-3 glass-controls rounded-2xl p-2 flex items-center gap-3 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+                    <button id="play-pause-btn" class="w-8 h-8 flex items-center justify-center bg-white/50 rounded-full text-[#8f214d] shadow-sm hover:bg-white/80 transition">
+                        ▶
+                    </button>
+                    <!-- Progress Bar -->
+                    <div class="flex-1 h-2 bg-black/20 rounded-full overflow-hidden cursor-pointer relative" id="progress-container">
+                        <div id="progress-bar" class="absolute top-0 left-0 h-full bg-[#8f214d] w-0 pointer-events-none rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="script-font text-2xl text-center mt-6 text-[#8f214d]">My Constant Inspiration ✨</p>
+            <div class="absolute -bottom-4 -right-4 text-4xl rotate-12 drop-shadow-md pointer-events-none">🌸</div>
+            <div class="absolute -top-6 -left-6 text-4xl -rotate-12 drop-shadow-md pointer-events-none">✨</div>
+        </div>
+
+        <p class="text-gray-700 mt-10 font-bold z-20 relative max-w-sm text-center px-4">Hope you liked this little surprise! Enjoy your day to the fullest.</p>
+    </section>
+
+    <!-- JavaScript Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const bgmBday = document.getElementById('bgm-bday');
+            if(bgmBday) bgmBday.volume = 0.9;
+
+            // -- The "No" Button Evasion --
+            const noBtn = document.getElementById('btn-no');
+            const phrases = ["No", "Are you sure?", "Think again!", "Please Yrr?", "Try Yes 🥺"];
+            let dodgeCount = 0;
+
+            function evadeNoBtn(e) {
+                if(e) e.preventDefault(); 
+                dodgeCount++;
+                const btnWidth = noBtn.offsetWidth || 100;
+                const btnHeight = noBtn.offsetHeight || 50;
+                const maxX = window.innerWidth - btnWidth - 20;
+                const maxY = window.innerHeight - btnHeight - 20;
+
+                const x = Math.max(10, Math.random() * maxX);
+                const y = Math.max(10, Math.random() * maxY);
+
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+                noBtn.innerText = phrases[Math.min(dodgeCount, phrases.length - 1)];
+            }
+
+            if(noBtn) {
+                noBtn.addEventListener('mouseover', evadeNoBtn);
+                noBtn.addEventListener('touchstart', evadeNoBtn, {passive: false}); 
+            }
+
+            window.switchPage = function(pageId) {
+                document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+            };
+
+            window.goToLetter = function() {
+                switchPage('page-letter');
+            };
+
+            // -- Letter Typing Effect --
+            // -- Letter Typing Effect --
+const letterText = `Happy Birthday! 🎂✨
+
+Waqt aur faasle chahe kitne bhi badh gaye hon, par kuch log hamesha dil ke bahut kareeb rahte hain, aur tum unhi mein se ek ho.
+
+Bhale hi aajkal hamari utni baatein nahi ho paati aur hum apni-apni life mein thoda busy ho gaye hain, par iska matlab ye bilkul nahi ki tumhari yaad nahi aati. Wo purane din aur purani yaadein aaj bhi bahut special hain.
+
+Main sach mein chahta hoon ki tumhe duniya ki har wo khushi mile jo tum deserve karti ho. Hamesha aise hi muskurati raho aur apni life mein khub aage badho.
+
+Apna special din bahut achhe se enjoy karna! 🎉🙌`;
+
+            window.openLetter = function() {
+                document.getElementById('envelope-container').classList.add('hidden');
+                const letterBox = document.getElementById('letter-content');
+                letterBox.classList.remove('hidden');
+                letterBox.classList.add('flex');
+                
+                const target = document.getElementById('typed-text');
+                let i = 0;
+                const speed = 35; 
+                
+                function typeWriter() {
+                    if (i < letterText.length) {
+                        target.innerHTML += letterText.charAt(i);
+                        letterBox.scrollTop = letterBox.scrollHeight; 
+                        i++;
+                        setTimeout(typeWriter, speed);
+                    } else {
+                        document.getElementById('btn-next-cake').classList.remove('opacity-0');
+                    }
+                }
+                typeWriter();
+            };
+
+            // -- Cake Page Logic --
+            window.goToCake = function() {
+                switchPage('page-cake');
+                document.body.className = 'theme-dark';
+                document.getElementById('cake-heading').className = 'script-font text-5xl mb-2 text-white';
+                document.getElementById('cake-sub').className = 'text-xl text-gray-400';
+            };
+
+            window.lightCandles = function() {
+                document.body.className = 'theme-paper';
+                document.getElementById('the-cake').classList.add('candles-lit');
+                document.getElementById('cake-heading').innerText = "Make a Wish! ✨";
+                
+                // Keep the sticker-text class for readability if needed, or simply dark text
+                document.getElementById('cake-heading').className = 'script-font text-5xl mb-2 text-[#8f214d] sticker-text';
+                document.getElementById('cake-sub').innerText = "Aankhein band karo aur ek wish mango, fir candles bujhao!";
+                document.getElementById('cake-sub').className = 'text-xl text-gray-800 font-bold';
+
+                document.getElementById('btn-light').classList.add('hidden');
+                document.getElementById('btn-blow').classList.remove('hidden');
+            };
+
+            window.blowCandles = function() {
+                if(bgmBday) bgmBday.play().catch(e => console.log("Bday audio blocked"));
+
+                document.body.className = 'theme-party';
+                
+                document.getElementById('cake-heading').innerText = "Happy Birthday Varisha 🎂🎉";
+                document.getElementById('cake-heading').className = 'script-font text-5xl md:text-6xl mb-2 text-[#ff69b4] drop-shadow-[0_0_15px_#ff69b4]';
+                document.getElementById('cake-sub').innerText = "Keep smiling and shining always!";
+                document.getElementById('cake-sub').className = 'text-2xl text-gray-200 mt-4';
+
+                document.getElementById('btn-blow').classList.add('hidden');
+
+                startFireworks();
+
+                setTimeout(() => {
+                    document.getElementById('btn-go-video').classList.remove('hidden');
+                }, 2500);
+            };
+
+            // -- Video Page Logic & Autoplay --
+            const videoEl = document.getElementById('di-video');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const progressContainer = document.getElementById('progress-container');
+
+            window.goToVideo = function() {
+                document.body.className = 'theme-paper';
+                document.getElementById('fireworks').style.opacity = '0';
+                switchPage('page-video');
+                
+                if(videoEl) {
+                    videoEl.play().then(() => {
+                        playPauseBtn.innerText = '⏸';
+                    }).catch(e => {
+                        console.log("Auto-play blocked");
+                        playPauseBtn.innerText = '▶';
+                    });
+                }
+            };
+
+            if(playPauseBtn && videoEl) {
+                playPauseBtn.addEventListener('click', () => {
+                    if (videoEl.paused) {
+                        videoEl.play();
+                        playPauseBtn.innerText = '⏸';
+                    } else {
+                        videoEl.pause();
+                        playPauseBtn.innerText = '▶';
+                    }
+                });
+
+                videoEl.addEventListener('click', () => {
+                    if (videoEl.paused) {
+                        videoEl.play();
+                        playPauseBtn.innerText = '⏸';
+                    } else {
+                        videoEl.pause();
+                        playPauseBtn.innerText = '▶';
+                    }
+                });
+
+                videoEl.addEventListener('timeupdate', () => {
+                    const percentage = (videoEl.currentTime / videoEl.duration) * 100;
+                    progressBar.style.width = percentage + '%';
+                });
+
+                progressContainer.addEventListener('click', (e) => {
+                    const rect = progressContainer.getBoundingClientRect();
+                    const pos = (e.clientX - rect.left) / progressContainer.offsetWidth;
+                    videoEl.currentTime = pos * videoEl.duration;
+                });
+
+                videoEl.addEventListener('ended', () => {
+                    playPauseBtn.innerText = '▶';
+                });
+            }
+
+            // -- Fireworks Canvas Logic --
+            const canvas = document.getElementById('fireworks');
+            if(canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+                window.addEventListener('resize', () => {
+                    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+                });
+
+                class Particle {
+                    constructor(x, y, color) {
+                        this.x = x; this.y = y; this.color = color;
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 6 + 2;
+                        this.vx = Math.cos(angle) * speed;
+                        this.vy = Math.sin(angle) * speed;
+                        this.alpha = 1; this.decay = Math.random() * 0.015 + 0.015;
+                    }
+                    update() {
+                        this.vx *= 0.98; this.vy *= 0.98; this.vy += 0.04;
+                        this.x += this.vx; this.y += this.vy; this.alpha -= this.decay;
+                    }
+                    draw(ctx) {
+                        ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath();
+                        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                        ctx.fillStyle = this.color; ctx.fill();
+                        ctx.shadowBlur = 10; ctx.shadowColor = this.color; ctx.fill();
+                        ctx.restore();
+                    }
+                }
+
+                let particles = [];
+                const colorsArr = ['#ff69b4', '#fcd34d', '#3b82f6', '#10b981', '#a855f7', '#ef4444'];
+
+                function explode(x, y) {
+                    const color = colorsArr[Math.floor(Math.random() * colorsArr.length)];
+                    for (let i = 0; i < 60; i++) particles.push(new Particle(x, y, color));
+                }
+
+                window.startFireworks = function() {
+                    document.getElementById('fireworks').style.opacity = '1';
+                    setInterval(() => {
+                        if (document.body.classList.contains('theme-party')) {
+                            const x = Math.random() * canvas.width;
+                            const y = Math.random() * (canvas.height * 0.6); 
+                            explode(x, y);
+                        }
+                    }, 600);
+                    
+                    function animate() {
+                        requestAnimationFrame(animate);
+                        ctx.fillStyle = 'rgba(5, 5, 5, 0.2)'; 
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        particles = particles.filter(p => p.alpha > 0);
+                        particles.forEach(p => { p.update(); p.draw(ctx); });
+                    }
+                    animate();
+                };
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+```
